@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.deinplugin</groupId>
+  <artifactId>LicenseLib</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>License-System</name>
+  <description>	</description>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+  	<dependency>
+		<groupId>com.google.code.gson</groupId>
+		<artifactId>gson</artifactId>
+		<version>LATEST</version>
+	</dependency>
+  </dependencies>
+  
+  <url>https://dein-plugin.de/LicenseSystem/</url>
+  <organization>
+  	<name>Jonas Franz Software</name>
+  	<url>dein-plugin.de</url>
+  </organization>
+  <developers>
+  	<developer>
+  		<name>Jonas Franz</name>
+  		<email>support@dein-plugin.de</email>
+  		<organization>Jonas Franz Software</organization>
+  		<roles>
+  			<role>Project-Manager</role>
+  			<role>Java-Developer</role>
+  			<role>PHP-Developer</role>
+  		</roles>
+  	</developer>
+  	<developer>
+  		<name>Marvin Erkes</name>
+  		<organization>StripeCode</organization>
+  		<roles>
+  			<role>Java-Developer</role>
+  		</roles>
+  	</developer>
+  </developers>
+</project>s
