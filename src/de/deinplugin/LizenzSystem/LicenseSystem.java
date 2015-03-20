@@ -10,8 +10,14 @@ public class LicenseSystem
 {
 	private static Thread thread;
 	private static License license;
+	private static boolean failed = false;
 	public  static boolean start(final License lic, final LicensePlugin plugin){
-		if(!lic.onActivate().success) return false;
+		LicenseResult result = lic.onActivate();
+		if(!result.success) {
+			failed = true;
+			System.err.println("Fehler bei der Aktivierung des Lizenz-Keys: "+result.error);
+			return false;
+		}
 		license = lic;
 		thread = new Thread(new Runnable() {
 			
@@ -22,6 +28,7 @@ public class LicenseSystem
 					public void run() {
 						LicenseResult result = license.onValidate();
 						if(!result.success){
+							failed =true;
 							System.err.println("Fehler bei der Lizenz-Prüfung: "+ result.error);
 							plugin.onLicenseInvalid(lic);
 						}
@@ -34,7 +41,7 @@ public class LicenseSystem
 		return true;
 	}
 	public static void stop(){
-		license.onDeactivate();
-		thread.stop();
+		if(!failed) license.onDeactivate();
+		if(!failed) thread.stop();
 	}
 }

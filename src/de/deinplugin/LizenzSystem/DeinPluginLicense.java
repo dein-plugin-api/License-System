@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URL;
+import java.net.URLConnection;
+
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -15,43 +17,55 @@ import com.google.gson.JsonSyntaxException;
  *
  */
 public class DeinPluginLicense extends  License{
-
+	 private final String USER_AGENT = "Mozilla/5.0";
+	 
 	public DeinPluginLicense(String license_key, String product_key) {
 		super(license_key, product_key);
 		
 	}
-	private static LicenseResult fromException(Exception e){
+	private  LicenseResult fromException(Exception e){
 		LicenseResult result = new LicenseResult();
 		result.success = false;
-		result.error = e.getMessage();
+		try {
+			result.error = e.getMessage()+readUrl("https://dein-plugin.de/license.php?id="+getProductID()+"&key="+getKey()+"&mac="+getMacAdress());
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		return result;
 	}
 	public LicenseResult onValidate() {
 		Gson gson = new Gson();
 		try {
-			return (LicenseResult) gson.fromJson(readUrl("https://www.dein-plugin.de/license.php?id="+getProductID()+"&key="+getKey()+"&mac="+getMacAdress()), LicenseResult.class);
+			return (LicenseResult) gson.fromJson(readUrl("https://dein-plugin.de/license.php?id="+getProductID()+"&key="+getKey()+"&mac="+getMacAdress()), LicenseResult.class);
 		} catch (JsonSyntaxException e) {
 			return fromException(e);
 		} catch (Exception e) {
 			return fromException(e);
 		}
 	}
-	private static String readUrl(String urlString) throws Exception {
-	    BufferedReader reader = null;
-	    try {
-	        URL url = new URL(urlString);
-	        reader = new BufferedReader(new InputStreamReader(url.openStream()));
-	        StringBuffer buffer = new StringBuffer();
-	        int read;
-	        char[] chars = new char[1024];
-	        while ((read = reader.read(chars)) != -1)
-	            buffer.append(chars, 0, read); 
+	private  String readUrl(String urlString) throws Exception {
+		StringBuilder content = new StringBuilder();
+		 
+	      URL url = new URL(urlString);
+	 
+	      URLConnection urlConnection = url.openConnection();
+	      urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; de-DE; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
-	        return buffer.toString();
-	    } finally {
-	        if (reader != null)
-	            reader.close();
-	    }
+	      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+	 
+	      String line;
+	 
+	      while ((line = bufferedReader.readLine()) != null)
+	      {
+	        content.append(line + "\n");
+	      }
+	      bufferedReader.close();
+	    
+	   
+	    return content.toString();
+		
+	   
 	}
 	 private String getMacAdress()
 	  { 
@@ -72,7 +86,7 @@ public class DeinPluginLicense extends  License{
 	public LicenseResult onActivate() {
 		Gson gson = new Gson();
 		try {
-			return (LicenseResult) gson.fromJson(readUrl("https://www.dein-plugin.de/activate.php?id="+getProductID()+"&key="+getKey()+"&mac="+getMacAdress()), LicenseResult.class);
+			return (LicenseResult) gson.fromJson(readUrl("https://dein-plugin.de/activate.php?id="+getProductID()+"&key="+getKey()+"&mac="+getMacAdress()), LicenseResult.class);
 		} catch (JsonSyntaxException e) {
 			return fromException(e);
 		} catch (Exception e) {
@@ -82,7 +96,7 @@ public class DeinPluginLicense extends  License{
 	public void onDeactivate() {
 		Gson gson = new Gson();
 		try {
-			gson.fromJson(readUrl("https://www.dein-plugin.de/deactivate.php?id="+getProductID()+"&key="+getKey()+"&mac="+getMacAdress()), LicenseResult.class);
+			gson.fromJson(readUrl("https://dein-plugin.de/deactivate.php?id="+getProductID()+"&key="+getKey()+"&mac="+getMacAdress()), LicenseResult.class);
 		} catch (JsonSyntaxException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
