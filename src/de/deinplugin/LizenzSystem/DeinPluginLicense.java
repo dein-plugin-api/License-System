@@ -33,7 +33,7 @@ public class DeinPluginLicense extends  License{
 			e1.printStackTrace();
 		}
 		if(e.getMessage().toLowerCase().contains("5")){
-			result.error = ""; 
+			result.error = "Website ist offline"; 
 			result.success = false;
 		}
 		return result;
