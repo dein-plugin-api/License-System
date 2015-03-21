@@ -32,6 +32,10 @@ public class DeinPluginLicense extends  License{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		if(e.getMessage().toLowerCase().contains("5")){
+			result.error = ""; 
+			result.success = false;
+		}
 		return result;
 	}
 	public LicenseResult onValidate() {
@@ -76,8 +80,10 @@ public class DeinPluginLicense extends  License{
 	      byte[] mac = network.getHardwareAddress();
 	      StringBuilder sb = new StringBuilder();
 	      for (int i = 0; i < mac.length; i++) {
+	    	  
 	        sb.append(String.format("%02X%s", new Object[] { Byte.valueOf(mac[i]), i < mac.length - 1 ? "" : "" }));
 	      }
+	      
 	      return sb.toString();
 	    }
 	    catch (Exception localException) {}
